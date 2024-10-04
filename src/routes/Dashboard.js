@@ -15,7 +15,10 @@ const Dashboard = () => {
     totalPageNo,
     autoTabSwitch,
     pageChangeIntervalInMs,
-    selectedTabsToDisplay,
+    selectionPage,
+    loadingPage,
+    crossdockPage,
+    symboticPage,
   } = useContext(UserSessionContext);
 
   const { loading } = useContext(SocketServicesContext);
@@ -31,27 +34,23 @@ const Dashboard = () => {
 
       const navigateToNextTab = () => {
         if (
-          currentPath.includes("selection") &&
-          selectedTabsToDisplay.includes("Loading")
+          currentPath.includes("selection") && loadingPage
         ) {
           navigate("/dashboard/loading");
         } else if (
-          currentPath.includes("loading") &&
-          selectedTabsToDisplay.includes("Crossdock")
+          currentPath.includes("loading") && crossdockPage
         ) {
           navigate("/dashboard/crossdock");
         } else if (
-          currentPath.includes("crossdock") &&
-          selectedTabsToDisplay.includes("Symbotic")
+          currentPath.includes("crossdock") && symboticPage
         ) {
           navigate("/dashboard/symbotic");
         } else if (
-          currentPath.includes("symbotic") &&
-          selectedTabsToDisplay.includes("Selection")
+          currentPath.includes("symbotic") && selectionPage
         ) {
           navigate("/dashboard/selection");
         } else {
-          navigate("/dashboard/" + selectedTabsToDisplay[0].toLowerCase());
+          navigate(`/dashboard/${selectionPage ? "selection" : loadingPage ? "loading" : crossdockPage ? "crossdock" : symboticPage ? "symbotic" : currentPath.split('/').pop()}`);
         }
       };
 
@@ -82,7 +81,7 @@ const Dashboard = () => {
       {/* Conditional Tabs */}
       {selectedWarehouse && (
         <div className="flex space-x-4 mb-4">
-          {selectedTabsToDisplay.includes("Selection") && (
+          {selectionPage && (
             <NavLink
               to="selection"
               className={({ isActive }) =>
@@ -94,7 +93,7 @@ const Dashboard = () => {
               SELECTION
             </NavLink>
           )}
-          {selectedTabsToDisplay.includes("Loading") && (
+          {loadingPage && (
             <NavLink
               to="loading"
               className={({ isActive }) =>
@@ -106,7 +105,7 @@ const Dashboard = () => {
               LOADING
             </NavLink>
           )}
-          {selectedTabsToDisplay.includes("Crossdock") && (
+          {crossdockPage && (
             <NavLink
               to="crossdock"
               className={({ isActive }) =>
@@ -118,7 +117,7 @@ const Dashboard = () => {
               CROSSDOCK
             </NavLink>
           )}
-          {selectedTabsToDisplay.includes("Symbotic") && (
+          {symboticPage && (
             <NavLink
               to="symbotic"
               className={({ isActive }) =>

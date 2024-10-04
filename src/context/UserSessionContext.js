@@ -12,9 +12,15 @@ export const UserSessionContextProvider = ({ children }) => {
   const [currentPageNo, setCurrentPageNo] = useState(1);
   const [dashboardData, setDashboardData] = useState([]);
   const [autoTabSwitch, setAutoTabSwitch] = useState(true);
-  const [pageChangeIntervalInMs, setPageChangeIntervalInMs] = useState(INTERVAL_OPTIONS[5].value);
+  const [pageChangeIntervalInMs, setPageChangeIntervalInMs] = useState(
+    INTERVAL_OPTIONS[5].value
+  );
   const [numberOfRowPerPage, setNumberOfRowPerPage] = useState(5);
-  const [selectedTabsToDisplay, setSelectedTabsToDisplay] = useState(["Selection", "Loading", "Crossdock", "Symbotic"]);
+
+  const [selectionPage, setSelection] = useState(true);
+  const [loadingPage, setLoading] = useState(true);
+  const [crossdockPage, setCrossdock] = useState(true);
+  const [symboticPage, setSymbotic] = useState(true);
 
   useEffect(() => {
     const settings = JSON.parse(localStorage.getItem("settings"));
@@ -24,7 +30,10 @@ export const UserSessionContextProvider = ({ children }) => {
       setAutoTabSwitch(settings.autoTabSwitch);
       setPageChangeIntervalInMs(settings.pageChangeIntervalInMs);
       setNumberOfRowPerPage(settings.numberOfRowPerPage);
-      setSelectedTabsToDisplay(settings.selectedTabsToDisplay);
+      setSelection(settings.selectionPage);
+      setLoading(settings.loadingPage);
+      setCrossdock(settings.crossdockPage);
+      setSymbotic(settings.symboticPage);
     }
   }, []);
 
@@ -49,11 +58,17 @@ export const UserSessionContextProvider = ({ children }) => {
         setPageChangeIntervalInMs,
         numberOfRowPerPage,
         setNumberOfRowPerPage,
-        selectedTabsToDisplay,
-        setSelectedTabsToDisplay,
         saveSettingsToLocalStorage,
         screenHeight,
         screenWidth,
+        selectionPage,
+        setSelection,
+        loadingPage,
+        setLoading,
+        crossdockPage,
+        setCrossdock,
+        symboticPage,
+        setSymbotic,
       }}
     >
       {children}

@@ -10,12 +10,18 @@ const Settings = () => {
   const intervalRef = useRef(null);
   const [countdown, setCountdown] = useState(5);
   const [launchTimeout, setLaunchTimeout] = useState(false);
-  const [selectedTabs, setSelectedTabs] = useState([
-    "Selection",
-    "Loading",
-    "Crossdock",
-    "Symbotic",
-  ]);
+  // const [selectedTabs, setSelectedTabs] = useState(
+  //   new Map([
+  //     ["Selection", true],
+  //     ["Loading", true],
+  //     ["Crossdock", true],
+  //     ["Symbotic", true],
+  //   ])
+  // );
+  const [selectionTab, setSelectionTab] = useState(true);
+  const [loadingTab, setLoadingTab] = useState(true);
+  const [crossdockTab, setCrossdockTab] = useState(true);
+  const [symboticTab, setSymboticTab] = useState(true);
 
   const {
     selectedWarehouse,
@@ -23,9 +29,13 @@ const Settings = () => {
     setNumberOfRowPerPage,
     pageChangeIntervalInMs,
     setPageChangeIntervalInMs,
-    setSelectedTabsToDisplay,
+    // setSelectedTabsToDisplay,
     setAutoTabSwitch,
     saveSettingsToLocalStorage,
+    setSelection,
+    setLoading,
+    setCrossdock,
+    setSymbotic,
   } = useContext(UserSessionContext);
 
   const { warehouses } = useContext(ApiContext);
@@ -42,7 +52,11 @@ const Settings = () => {
       setTempSelectedWarehouse(settings.selectedWarehouse);
       setTempPageChangeInterval(settings.pageChangeIntervalInMs);
       setTempRowNumber(settings.numberOfRowPerPage);
-      setSelectedTabs(settings.selectedTabsToDisplay);
+      // setSelectedTabs(settings.selectedTabsToDisplay);
+      setSelectionTab(settings.selectionPage);
+      setLoadingTab(settings.loadingPage);
+      setCrossdockTab(settings.crossdockPage);
+      setSymboticTab(settings.symboticPage);
     }
   }, []);
 
@@ -53,8 +67,14 @@ const Settings = () => {
 
   // Submit settings and navigate to the dashboard
   const navigateToDashboard = () => {
-    navigate(`/dashboard/${selectedTabs[0].toLowerCase()}`);
-    // navigate("/dashboard/selection");
+    // let firstSelectedTab;
+    // for (const [tab, selected] of selectedTabs) {
+    //   if (selected) {
+    //     firstSelectedTab = tab;
+    //     break;
+    //   }
+    // }
+    navigate(`/dashboard/${selectionTab ? "selection" : loadingTab ? "loading" : crossdockTab ? "crossdock" : symboticTab ? "symbotic" : "selection"}`);
   };
 
   const handleSubmit = () => {
@@ -64,23 +84,32 @@ const Settings = () => {
     }
 
     const autoTabSwitch = tempPageChangeInterval > 0;
-    
-    if(selectedTabs.length === 0) {
+
+    if (!selectionTab && !loadingTab && !crossdockTab && !symboticTab) {
       alert("Please select at least one tab to display");
       return;
     }
-    setSelectedTabsToDisplay(selectedTabs);
+    // setSelectedTabsToDisplay(selectedTabs);
     setNumberOfRowPerPage(tempRowNumber);
     setPageChangeIntervalInMs(tempPageChangeInterval);
     setSelectedWarehouse(tempSelectedWarehouse);
     setAutoTabSwitch(autoTabSwitch);
+    
+    setSelection(selectionTab),
+    setLoading(loadingTab),
+    setCrossdock(crossdockTab),
+    setSymbotic(symboticTab),
 
     saveSettingsToLocalStorage({
       selectedWarehouse: tempSelectedWarehouse,
       pageChangeIntervalInMs: tempPageChangeInterval,
       numberOfRowPerPage: tempRowNumber,
       autoTabSwitch,
-      selectedTabsToDisplay: selectedTabs,
+      // selectedTabsToDisplay: selectedTabs,
+      selectionPage: selectionTab,
+      loadingPage: loadingTab,
+      crossdockPage: crossdockTab,
+      symboticPage: symboticTab,
     });
 
     navigateToDashboard();
@@ -206,29 +235,54 @@ const Settings = () => {
       <div className="relative ml-4 mt-5 w-1/3">
         Select Tabs:
         <div className="flex gap-5">
-          {allTabs.map((tab) => (
             <span>
               <input
                 className="cursor-pointer"
                 type="checkbox"
-                id={tab}
-                checked={selectedTabs.includes(tab)}
-                onChange={(e) => {
-                  setSelectedTabs((prev) =>
-                    e.target.checked
-                      ? [...prev, e.target.id]
-                      : [...prev].filter((t) => t !== e.target.id)
-                  );
-                }}
+                id={"Selection"}
+                checked={selectionTab}
+                onChange={() => setSelectionTab(!selectionTab)}
               />
-              <label
-                className="ml-1 cursor-pointer"
-                htmlFor={tab}
-              >
-                {tab}
+              <label className="ml-1 cursor-pointer" htmlFor={"Selection"}>
+                {"Selection"}
               </label>
             </span>
-          ))}
+            <span>
+              <input
+                className="cursor-pointer"
+                type="checkbox"
+                id={"Loading"}
+                checked={loadingTab}
+                onChange={() => setLoadingTab(!loadingTab)}
+              />
+              <label className="ml-1 cursor-pointer" htmlFor={"Loading"}>
+                {"Loading"}
+              </label>
+            </span>
+            <span>
+              <input
+                className="cursor-pointer"
+                type="checkbox"
+                id={"Crossdock"}
+                checked={crossdockTab}
+                onChange={() => setCrossdockTab(!crossdockTab)}
+              />
+              <label className="ml-1 cursor-pointer" htmlFor={"Crossdock"}>
+                {"Crossdock"}
+              </label>
+            </span>
+            <span>
+              <input
+                className="cursor-pointer"
+                type="checkbox"
+                id={"Symbotic"}
+                checked={symboticTab}
+                onChange={() => setSymboticTab(!symboticTab)}
+              />
+              <label className="ml-1 cursor-pointer" htmlFor={"Symbotic"}>
+                {"Symbotic"}
+              </label>
+            </span>
         </div>
       </div>
 
@@ -251,9 +305,15 @@ const Settings = () => {
   );
 };
 
-// selection
-// loading
-// crossdock
-// symbotic
-
 export default Settings;
+
+
+
+
+                // onChange={(e) => {
+                //   setSelectedTabs((prev) => {
+                //     const newMap = new Map(prev);
+                //     newMap.set(tab, e.target.checked);
+                //     return newMap;
+                //   });
+                // }}
