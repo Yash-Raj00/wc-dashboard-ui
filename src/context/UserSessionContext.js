@@ -24,6 +24,7 @@ export const UserSessionContextProvider = ({ children }) => {
       setAutoTabSwitch(settings.autoTabSwitch);
       setPageChangeIntervalInMs(settings.pageChangeIntervalInMs);
       setNumberOfRowPerPage(settings.numberOfRowPerPage);
+      setSelectedTabsToDisplay(settings.selectedTabsToDisplay);
     }
   }, []);
 

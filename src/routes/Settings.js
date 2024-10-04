@@ -42,6 +42,7 @@ const Settings = () => {
       setTempSelectedWarehouse(settings.selectedWarehouse);
       setTempPageChangeInterval(settings.pageChangeIntervalInMs);
       setTempRowNumber(settings.numberOfRowPerPage);
+      setSelectedTabs(settings.selectedTabsToDisplay);
     }
   }, []);
 
@@ -79,6 +80,7 @@ const Settings = () => {
       pageChangeIntervalInMs: tempPageChangeInterval,
       numberOfRowPerPage: tempRowNumber,
       autoTabSwitch,
+      selectedTabsToDisplay: selectedTabs,
     });
 
     navigateToDashboard();
