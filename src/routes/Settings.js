@@ -10,14 +10,6 @@ const Settings = () => {
   const intervalRef = useRef(null);
   const [countdown, setCountdown] = useState(5);
   const [launchTimeout, setLaunchTimeout] = useState(false);
-  // const [selectedTabs, setSelectedTabs] = useState(
-  //   new Map([
-  //     ["Selection", true],
-  //     ["Loading", true],
-  //     ["Crossdock", true],
-  //     ["Symbotic", true],
-  //   ])
-  // );
   const [selectionTab, setSelectionTab] = useState(true);
   const [loadingTab, setLoadingTab] = useState(true);
   const [crossdockTab, setCrossdockTab] = useState(true);
@@ -29,7 +21,6 @@ const Settings = () => {
     setNumberOfRowPerPage,
     pageChangeIntervalInMs,
     setPageChangeIntervalInMs,
-    // setSelectedTabsToDisplay,
     setAutoTabSwitch,
     saveSettingsToLocalStorage,
     setSelection,
@@ -52,7 +43,6 @@ const Settings = () => {
       setTempSelectedWarehouse(settings.selectedWarehouse);
       setTempPageChangeInterval(settings.pageChangeIntervalInMs);
       setTempRowNumber(settings.numberOfRowPerPage);
-      // setSelectedTabs(settings.selectedTabsToDisplay);
       setSelectionTab(settings.selectionPage);
       setLoadingTab(settings.loadingPage);
       setCrossdockTab(settings.crossdockPage);
@@ -67,13 +57,6 @@ const Settings = () => {
 
   // Submit settings and navigate to the dashboard
   const navigateToDashboard = () => {
-    // let firstSelectedTab;
-    // for (const [tab, selected] of selectedTabs) {
-    //   if (selected) {
-    //     firstSelectedTab = tab;
-    //     break;
-    //   }
-    // }
     navigate(`/dashboard/${selectionTab ? "selection" : loadingTab ? "loading" : crossdockTab ? "crossdock" : symboticTab ? "symbotic" : "selection"}`);
   };
 
@@ -89,7 +72,6 @@ const Settings = () => {
       alert("Please select at least one tab to display");
       return;
     }
-    // setSelectedTabsToDisplay(selectedTabs);
     setNumberOfRowPerPage(tempRowNumber);
     setPageChangeIntervalInMs(tempPageChangeInterval);
     setSelectedWarehouse(tempSelectedWarehouse);
@@ -105,7 +87,6 @@ const Settings = () => {
       pageChangeIntervalInMs: tempPageChangeInterval,
       numberOfRowPerPage: tempRowNumber,
       autoTabSwitch,
-      // selectedTabsToDisplay: selectedTabs,
       selectionPage: selectionTab,
       loadingPage: loadingTab,
       crossdockPage: crossdockTab,
@@ -306,14 +287,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
-
-
-
-                // onChange={(e) => {
-                //   setSelectedTabs((prev) => {
-                //     const newMap = new Map(prev);
-                //     newMap.set(tab, e.target.checked);
-                //     return newMap;
-                //   });
-                // }}
