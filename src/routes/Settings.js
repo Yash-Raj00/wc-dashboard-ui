@@ -203,7 +203,7 @@ const Settings = () => {
           values={[
             INTERVAL_OPTIONS.find(
               (item) => item.value == pageChangeIntervalInMs
-            ),
+            ) || INTERVAL_OPTIONS[0],
           ]}
           labelField="text"
           valueField="value"
