@@ -13,7 +13,7 @@ export const UserSessionContextProvider = ({ children }) => {
   const [dashboardData, setDashboardData] = useState([]);
   const [autoTabSwitch, setAutoTabSwitch] = useState(true);
   const [pageChangeIntervalInMs, setPageChangeIntervalInMs] = useState(
-    INTERVAL_OPTIONS[5].value
+    INTERVAL_OPTIONS[1].value
   );
   const [numberOfRowPerPage, setNumberOfRowPerPage] = useState(5);
 

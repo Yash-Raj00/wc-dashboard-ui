@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import { UserSessionContext } from "../context/UserSessionContext";
 import { ApiContext } from "../context/ApiContext";
 import Select from "react-dropdown-select";
-import { allTabs, INTERVAL_OPTIONS } from "../constants";
+import { INTERVAL_OPTIONS } from "../constants";
 import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
@@ -57,7 +57,18 @@ const Settings = () => {
 
   // Submit settings and navigate to the dashboard
   const navigateToDashboard = () => {
-    navigate(`/dashboard/${selectionTab ? "selection" : loadingTab ? "loading" : crossdockTab ? "crossdock" : symboticTab ? "symbotic" : "selection"}`);
+    let targetTab = "symbotic";
+    
+    if (selectionTab) {
+      targetTab = "selection";
+    } else if (loadingTab) {
+      targetTab = "loading";
+    } else if (crossdockTab) {
+      targetTab = "crossdock";
+    }
+
+    navigate(`/dashboard/${targetTab}`);
+    // navigate(`/dashboard/${selectionTab ? "selection" : loadingTab ? "loading" : crossdockTab ? "crossdock" : symboticTab ? "symbotic" : "selection"}`);
   };
 
   const handleSubmit = () => {
@@ -68,7 +79,7 @@ const Settings = () => {
 
     const autoTabSwitch = tempPageChangeInterval > 0;
 
-    if (!selectionTab && !loadingTab && !crossdockTab && !symboticTab) {
+    if (!selectionTab || !loadingTab || !crossdockTab || !symboticTab) {
       alert("Please select at least one tab to display");
       return;
     }
@@ -213,7 +224,7 @@ const Settings = () => {
       </div>
 
       {/* Tabs Selection */}
-      <div className="relative ml-4 mt-5 w-1/3">
+      <div className="relative ml-4 mt-5 w-2/3">
         Select Tabs:
         <div className="flex gap-5">
             <span>

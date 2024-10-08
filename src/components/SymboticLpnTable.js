@@ -43,7 +43,7 @@ function SymboticLpnTable({ data }) {
                 </td>
                 <td>
                   <RegularCell
-                    text={row.palletQuantity}
+                    text={row.replenPallets}
                     justifyContent="center"
                   />
                 </td>

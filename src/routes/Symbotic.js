@@ -19,13 +19,13 @@ export default function Symbotic() {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (selectedWarehouse && currentItem == 1) {
+        if (selectedWarehouse && currentItem === 1) {
           await requestData(
             "symboticPriorities",
             setLpnData,
             selectedWarehouse
           );
-        } else if (selectedWarehouse && currentItem == 2) {
+        } else if (selectedWarehouse && currentItem === 2) {
           await requestData("symbotic", setGraphData, selectedWarehouse);
         }
       } catch (error) {
@@ -37,26 +37,38 @@ export default function Symbotic() {
   }, [selectedWarehouse, currentItem]);
 
   const onPageChange = (item) => {
-    if (item?.includes(2)) setCurrentItem(2);
-    else setCurrentItem(1);
+    console.log('item', item);
+    if (item?.includes(2) && currentItem === 1) {
+      setCurrentItem(2);
+    } else {
+      setCurrentItem(1);
+    }
   };
+  /*console.log('item', item);
+    if (item?.includes(2) && currentItem === 1) {
+       setCurrentItem(2);
+    } else {
+        setCurrentItem(1);
+    }*/
 
   return loading ? (
     <LoadingIndicator />
   ) : (
     <>
-      {currentItem == 1 && lpnData.length > 0 && (
+        {console.log(currentItem)}
+      {currentItem === 1 && lpnData.length > 0 && (
         <SymboticLpnTable data={lpnData} />
       )}
-      {currentItem == 2 && graphData?.data?.length > 0 && (
+      {currentItem === 2 && graphData?.data?.length > 0 && (
         <SymboticGraph graphData={graphData} />
       )}
 
       <Pagination
-        data={[1, 2]}
-        onPageChange={onPageChange}
-        customPageNumber
-        totalCustomPages={2}
+          data={[1, 2]}
+          onPageChange={onPageChange}
+          customPageNumber
+          totalCustomPages={2}
+          isSymbotic={true}
       />
       <ProgressBar timerActive={!loading} />
     </>
