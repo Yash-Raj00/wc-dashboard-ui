@@ -33,15 +33,13 @@ export default function Symbotic() {
       }
     }
     fetchData();
-    console.log("selectedWarehouse", selectedWarehouse);
+    // console.log("selectedWarehouse", selectedWarehouse);
   }, [selectedWarehouse, currentItem]);
 
   const onPageChange = (item) => {
     console.log('item', item);
     if (item?.includes(2) && currentItem === 1) {
       setCurrentItem(2);
-    } else {
-      setCurrentItem(1);
     }
   };
   /*console.log('item', item);
@@ -56,7 +54,7 @@ export default function Symbotic() {
   ) : (
     <>
         {console.log(currentItem)}
-      {currentItem === 1 && lpnData.length > 0 && (
+      {currentItem === 1 && lpnData?.length > 0 && (
         <SymboticLpnTable data={lpnData} />
       )}
       {currentItem === 2 && graphData?.data?.length > 0 && (

@@ -79,7 +79,7 @@ const Settings = () => {
 
     const autoTabSwitch = tempPageChangeInterval > 0;
 
-    if (!selectionTab || !loadingTab || !crossdockTab || !symboticTab) {
+    if (!selectionTab && !loadingTab && !crossdockTab && !symboticTab) {
       alert("Please select at least one tab to display");
       return;
     }

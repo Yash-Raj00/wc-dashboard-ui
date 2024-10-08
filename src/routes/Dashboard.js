@@ -33,25 +33,24 @@ const Dashboard = () => {
       const currentPath = window.location.pathname;
 
       const navigateToNextTab = () => {
-        if (
-          currentPath.includes("selection") && loadingPage
-        ) {
-          navigate("/dashboard/loading");
-        } else if (
-          currentPath.includes("loading") && crossdockPage
-        ) {
-          navigate("/dashboard/crossdock");
-        } else if (
-          currentPath.includes("crossdock") && symboticPage
-        ) {
-          navigate("/dashboard/symbotic");
-        } else if (
-          currentPath.includes("symbotic") && selectionPage
-        ) {
-          navigate("/dashboard/selection");
-        } else {
-          navigate(`/dashboard/${selectionPage ? "selection" : loadingPage ? "loading" : crossdockPage ? "crossdock" : symboticPage ? "symbotic" : currentPath.split('/').pop()}`);
+        if (currentPath.includes("selection")) {
+          if(loadingPage) navigate(`/dashboard/loading`);
+          else if(crossdockPage) navigate(`/dashboard/crossdock`);
+          else if(symboticPage) navigate(`/dashboard/symbotic`);
+        } else if (currentPath.includes("loading")) {
+          if(crossdockPage) navigate(`/dashboard/crossdock`);
+          else if(symboticPage) navigate(`/dashboard/symbotic`);
+          else if(selectionPage) navigate(`/dashboard/selection`);          
+        } else if (currentPath.includes("crossdock")) {
+          if(symboticPage) navigate(`/dashboard/symbotic`);
+          else if(selectionPage) navigate(`/dashboard/selection`);
+          else if(loadingPage) navigate(`/dashboard/loading`);
+        } else if (currentPath.includes("symbotic")) {
+          if(selectionPage) navigate(`/dashboard/selection`);
+          else if(loadingPage) navigate(`/dashboard/loading`);
+          else if(crossdockPage) navigate(`/dashboard/crossdock`);
         }
+        else navigate(`/dashboard/${currentPath.split("/").pop()}`);
       };
 
       timerRef.current = setTimeout(
