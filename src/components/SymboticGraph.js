@@ -1,13 +1,13 @@
 import React from "react";
 import SymboticHeaderFirstRow from "./SymboticHeaderFirstRow";
 import SymboticHeaderSecondRow from "./SymboticHeaderSecondRow";
-import { SymboticDummyData } from "../constants";
+import { SymboticGridSetupData } from "../constants";
 import RegularCell from "./RegularCell";
 import { minutesToHours } from "../utils";
 
 function SymboticGraph({ graphData }) {
   const SymboticHeaderFirstRowProps = {
-    cellWidth: "412px",
+    cellWidth: "402.5px",
   };
   const SymboticHeaderSecondRowProps = {
     cellWidth: "200px",
@@ -16,28 +16,35 @@ function SymboticGraph({ graphData }) {
     cellWidth: "200px",
   };
 
-  // Destructure the values from SymboticGraphDummyData
+  const {
+    replenAIBPallets,
+    minutesPalletsInReplenQueue
+  } = graphData.data[0];
+
   const {
     putawayAIBPallets,
-    putawayMIBCases,
-    minutesPalletsInPutawayQueue,
-    replenishmentAIBPallets,
-    replenishmentMIBCases,
-    minutesPalletsInReplenQueue,
-  } = graphData.data[0];
+    minutesPalletsInPutawayQueue
+  } = graphData.data[1];
+
+  const {
+    palletMoveAIBPallets
+  } = graphData.data[2];
 
   const {
     statuses,
     maxQueue,
-    receivingAllocationPercent,
+    putawayAllocationPercent,
+    replenAllocationPercent,
+    forecastReplenAllocationPercent, 
     belowQueueVariance,
-    maxCases,
     maxMinutesForPalletsInPutawayQueue,
     maxMinutesForPalletsInReplenQueue,
-  } = graphData.meta[0];
-
-  const receivingAllocatedValue = maxQueue * (receivingAllocationPercent / 100);
-  const replenishmentAllocatedValue = maxQueue - receivingAllocatedValue;
+  } = graphData.meta[0]; 
+  
+  const putawayAllocatedValue = maxQueue * putawayAllocationPercent;
+  const replenAllocatedValue = maxQueue * replenAllocationPercent;
+  const forecastReplenAllocatedValue = maxQueue * forecastReplenAllocationPercent;
+  console.log(`putawayAllocatedValue: ${putawayAllocatedValue}, replenAllocatedValue: ${replenAllocatedValue}, forecastReplenAllocatedValue: ${forecastReplenAllocatedValue}`);
 
   const getPalletCellColor = (
     currentCellMin,
@@ -45,33 +52,23 @@ function SymboticGraph({ graphData }) {
     pallets,
     maxPalletsValue
   ) => {
-    if (currentCellMin >= pallets) {
+    if (currentCellMin >= pallets || pallets === 0) {
       return null;
     } else {
       if (currentCellMax < maxPalletsValue) {
-        if (maxPalletsValue - currentCellMax < 5) {
-          return statuses[1].color;
+        if (maxPalletsValue - currentCellMax < belowQueueVariance) {
+          return statuses[1].color; //warning
         }
-        return statuses[0].color;
-      } else if (
-        currentCellMax > maxPalletsValue &&
-        currentCellMax - maxPalletsValue < 5
-      ) {
-        return statuses[1].color;
-      } else {
-        return statuses[2].color;
+        return statuses[0].color; //good
+      } else if (currentCellMax > maxPalletsValue) {
+        if (currentCellMax - maxPalletsValue < belowQueueVariance) {
+          return statuses[1].color; //warning
+        }
+        return null;
+      }  else {
+        return statuses[2].color; // over
       }
     }
-  };
-
-  const getCaseCellColor = (leftValue, actualValue) => {
-    if (leftValue <= actualValue && leftValue >= maxCases) {
-      return statuses[2].color;
-    } else if (leftValue <= actualValue) {
-      return statuses[0].color;
-    }
-
-    return null;
   };
 
   return (
@@ -100,10 +97,13 @@ function SymboticGraph({ graphData }) {
             </tr>
           </thead>
           <tbody>
-            {SymboticDummyData.map(({ label, min, max, value }, index) => (
+            {SymboticGridSetupData.map(({ label, min, max, value }, index) => (
               <tr key={index} className="block">
                 <td>
                   <RegularCell text={label} {...cellProps} />
+                </td>
+                <td>
+                  <RegularCell {...cellProps} />
                 </td>
                 <td>
                   <RegularCell
@@ -112,14 +112,8 @@ function SymboticGraph({ graphData }) {
                       min,
                       max,
                       putawayAIBPallets,
-                      receivingAllocatedValue
+                      putawayAllocatedValue
                     )}
-                  />
-                </td>
-                <td>
-                  <RegularCell
-                    {...cellProps}
-                    backgroundColor={getCaseCellColor(value, putawayMIBCases)}
                   />
                 </td>
                 <td>
@@ -131,28 +125,38 @@ function SymboticGraph({ graphData }) {
                     backgroundColor={getPalletCellColor(
                       min,
                       max,
-                      replenishmentAIBPallets,
-                      replenishmentAllocatedValue
+                      replenAIBPallets,
+                      replenAllocatedValue
                     )}
                   />
+                </td>
+                <td>
+                  <RegularCell {...cellProps} />
                 </td>
                 <td>
                   <RegularCell
                     {...cellProps}
-                    backgroundColor={getCaseCellColor(
-                      value,
-                      replenishmentMIBCases
+                    backgroundColor={getPalletCellColor(
+                      min,
+                      max,
+                      replenAIBPallets,
+                      forecastReplenAllocatedValue
                     )}
                   />
-                </td>
+                </td> 
                 <td>
                   <RegularCell {...cellProps} />
                 </td>
                 <td>
-                  <RegularCell {...cellProps} />
-                </td>
-                <td>
-                  <RegularCell {...cellProps} />
+                  <RegularCell
+                    {...cellProps}
+                    backgroundColor={getPalletCellColor(
+                      min,
+                      max,
+                      palletMoveAIBPallets,
+                      1
+                    )}
+                  />
                 </td>
               </tr>
             ))}
@@ -166,9 +170,7 @@ function SymboticGraph({ graphData }) {
                 <RegularCell
                   {...cellProps}
                   {...SymboticHeaderFirstRowProps}
-                  text={`${minutesToHours(
-                    minutesPalletsInPutawayQueue
-                  )} > ${minutesToHours(maxMinutesForPalletsInPutawayQueue)} `}
+                  text={`${putawayAIBPallets} pallets`}
                   backgroundColor={
                     minutesPalletsInPutawayQueue >
                     maxMinutesForPalletsInPutawayQueue
@@ -180,18 +182,13 @@ function SymboticGraph({ graphData }) {
                 />
               </td>
               <td>
-                <RegularCell {...cellProps} />
-              </td>
-              <td>
                 <RegularCell
                   {...cellProps}
                   {...SymboticHeaderFirstRowProps}
-                  text={`${minutesToHours(
-                    minutesPalletsInReplenQueue
-                  )} > ${minutesToHours(maxMinutesForPalletsInReplenQueue)} `}
+                  text={`${replenAIBPallets} pallets`}
                   backgroundColor={
                     minutesPalletsInReplenQueue >
-                    maxMinutesForPalletsInReplenQueue
+                    1400
                       ? statuses[2].color
                       : null
                   }
@@ -200,7 +197,64 @@ function SymboticGraph({ graphData }) {
                 />
               </td>
               <td>
+                <RegularCell {...cellProps} {...SymboticHeaderFirstRowProps} />
+              </td>
+              <td>
+                <RegularCell {...cellProps} {...SymboticHeaderFirstRowProps} />
+              </td>
+            </tr>
+            <tr style={{ display: "block" }}>
+              <td>
                 <RegularCell {...cellProps} />
+              </td>
+              <td>
+                <RegularCell
+                  {...cellProps}
+                  {...SymboticHeaderFirstRowProps}
+                  text={`${minutesToHours(
+                    minutesPalletsInPutawayQueue
+                  )} 
+                  ${minutesPalletsInPutawayQueue >
+                      maxMinutesForPalletsInPutawayQueue
+                      ? `>`
+                      : `<`
+                    }
+                  ${minutesToHours(maxMinutesForPalletsInPutawayQueue)} `}
+                  backgroundColor={
+                    minutesPalletsInPutawayQueue >
+                      maxMinutesForPalletsInPutawayQueue
+                      ? statuses[2].color
+                      : null
+                  }
+                  justifyContent="start"
+                  style={{ paddingLeft: 20 }}
+                />
+              </td>
+              <td>
+                <RegularCell
+                  {...cellProps}
+                  {...SymboticHeaderFirstRowProps}
+                  text={` ${minutesToHours(
+                    minutesPalletsInReplenQueue
+                  )} 
+                  ${minutesPalletsInReplenQueue >
+                      maxMinutesForPalletsInReplenQueue
+                      ? `>`
+                      : `<`
+                    }
+                  ${minutesToHours(maxMinutesForPalletsInReplenQueue)} `}
+                  backgroundColor={
+                    minutesPalletsInReplenQueue >
+                      1400
+                      ? statuses[2].color
+                      : null
+                  }
+                  justifyContent="start"
+                  style={{ paddingLeft: 20 }}
+                />
+              </td>
+              <td>
+                <RegularCell {...cellProps} {...SymboticHeaderFirstRowProps} />
               </td>
               <td>
                 <RegularCell {...cellProps} {...SymboticHeaderFirstRowProps} />
@@ -214,13 +268,10 @@ function SymboticGraph({ graphData }) {
                 <RegularCell {...cellProps} {...SymboticHeaderFirstRowProps} />
               </td>
               <td>
-                <RegularCell {...cellProps} />
-              </td>
-              <td>
                 <RegularCell {...cellProps} {...SymboticHeaderFirstRowProps} />
               </td>
               <td>
-                <RegularCell {...cellProps} />
+                <RegularCell {...cellProps} {...SymboticHeaderFirstRowProps} />
               </td>
               <td>
                 <RegularCell {...cellProps} {...SymboticHeaderFirstRowProps} />

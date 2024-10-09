@@ -6,6 +6,7 @@ const SymboticHeaderFirstRow = (props) => {
     ...props,
   };
   const cellWidth = "200px";
+  const doubleCellWidth = "402.5px";
   return (
     <>
       <style>
@@ -35,30 +36,33 @@ const SymboticHeaderFirstRow = (props) => {
         <th>
           <RegularCell
             {...cellProps}
-            text="RECEIVING"
+            text="PUTAWAYS"
             justifyContent="center"
+            cellWidth={doubleCellWidth}
           />
-        </th>
-
-        <th>
-          <RegularCell cellWidth={cellWidth} />
         </th>
         <th>
           <RegularCell
             {...cellProps}
-            text="BELOW MINIMUM REPLENISHMENT"
+            text="REPLENISHMENT"
             justifyContent="center"
+            cellWidth={doubleCellWidth}
           />
-        </th>
-
-        <th>
-          <RegularCell cellWidth={cellWidth} />
         </th>
         <th>
           <RegularCell
             {...cellProps}
             text="FORECAST REPLENISHMENT"
             justifyContent="center"
+            cellWidth={doubleCellWidth}
+          />
+        </th>
+        <th>
+          <RegularCell
+            {...cellProps}
+            text="MOVEMENT"
+            justifyContent="center"
+            cellWidth={doubleCellWidth}
           />
         </th>
       </tr>

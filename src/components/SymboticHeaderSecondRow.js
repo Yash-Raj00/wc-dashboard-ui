@@ -33,16 +33,12 @@ const SymboticHeader = (props) => {
           <RegularCell {...cellProps} />
         </th>
         <th>
-          <RegularCell
-            {...cellProps}
-            text="AIB PALLETS"
-            justifyContent="center"
-          />
+          <RegularCell {...cellProps} />
         </th>
         <th>
           <RegularCell
             {...cellProps}
-            text="MIB CASES"
+            text="AIB PALLETS"
             justifyContent="center"
           />
         </th>
@@ -57,13 +53,6 @@ const SymboticHeader = (props) => {
           />
         </th>
         <th>
-          <RegularCell
-            {...cellProps}
-            text="MIB CASES"
-            justifyContent="center"
-          />
-        </th>
-        <th>
           <RegularCell {...cellProps} />
         </th>
         <th>
@@ -74,9 +63,12 @@ const SymboticHeader = (props) => {
           />
         </th>
         <th>
+          <RegularCell {...cellProps} />
+        </th>
+        <th>
           <RegularCell
             {...cellProps}
-            text="MIB CASES"
+            text="AIB PALLETS"
             justifyContent="center"
           />
         </th>

@@ -7,6 +7,8 @@ export default function Pagination({
   onPageChange,
   customPageNumber = false,
   totalCustomPages = 1,
+  isSymbotic = false,
+  symboticDataType,
 }) {
   const {
     setTotalPageNo,
@@ -31,9 +33,12 @@ export default function Pagination({
     if (currentPage > 1 && currentPage > totalPages) {
       setCurrentPage((prev) => prev - 1);
     }
-    onPageChange(currentItems);
+    !isSymbotic && onPageChange(currentItems);
     setTotalPageNo(totalPages);
     setCurrentPageNo(currentPage);
+    if(isSymbotic && symboticDataType === 2 && currentPage < 2) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
   }, [currentPage, data, numberOfRowPerPage]);
 
   useEffect(() => {
@@ -44,6 +49,7 @@ export default function Pagination({
     if (currentPage < totalPages && autoTabSwitch && !loading) {
       const id = setInterval(() => {
         setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+        isSymbotic && onPageChange(currentItems);
       }, pageChangeIntervalInMs * 1000);
 
       return () => clearInterval(id);

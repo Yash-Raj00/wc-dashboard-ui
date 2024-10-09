@@ -1,4 +1,4 @@
-export const SymboticDummyData = [
+export const SymboticGridSetupData = [
   { id: 22, value: 201, min: 200, max: 10000, label: "200+" },
   { id: 21, value: 101, min: 100, max: 200, label: "101-200" },
   { id: 1, value: 100, min: 90, max: 100, label: "100" },
@@ -56,15 +56,11 @@ export const SymboticGraphDummyData = {
 
 export const INTERVAL_OPTIONS = [
   { text: "None", value: 0 },
-  { text: "5 sec", value: 5 },
-  { text: "15 sec", value: 15 },
-  { text: "30 sec", value: 30 },
-  { text: "45 sec", value: 45 },
   { text: "1 min", value: 60 },
-  { text: "1 min 15 sec", value: 75 },
   { text: "1 min 30 sec", value: 90 },
-  { text: "1 min 45 sec", value: 105 },
   { text: "2 min", value: 120 },
+  { text: "3 min", value: 180 },
+  { text: "5 min", value: 180 },
 ];
 
 export const SymboticGraphDummyData2 = {
@@ -120,5 +116,3 @@ export const SymboticTableDummyData = [
     palletStatus: "In Reserve",
   },
 ];
-
-export const allTabs = ["Selection", "Loading", "Crossdock", "Symbotic"];
