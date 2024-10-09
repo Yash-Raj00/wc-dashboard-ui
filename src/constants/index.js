@@ -56,10 +56,6 @@ export const SymboticGraphDummyData = {
 
 export const INTERVAL_OPTIONS = [
   { text: "None", value: 0 },
-  { text: "5 sec", value: 5 },
-  { text: "15 sec", value: 15 },
-  { text: "30 sec", value: 30 },
-  { text: "45 sec", value: 45 },
   { text: "1 min", value: 60 },
   { text: "1 min 15 sec", value: 75 },
   { text: "1 min 30 sec", value: 90 },
