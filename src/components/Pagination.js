@@ -7,7 +7,8 @@ export default function Pagination({
   onPageChange,
   customPageNumber = false,
   totalCustomPages = 1,
-  isSymbotic = false
+  isSymbotic = false,
+  symboticDataType,
 }) {
   const {
     setTotalPageNo,
@@ -35,6 +36,9 @@ export default function Pagination({
     !isSymbotic && onPageChange(currentItems);
     setTotalPageNo(totalPages);
     setCurrentPageNo(currentPage);
+    if(isSymbotic && symboticDataType === 2 && currentPage < 2) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
   }, [currentPage, data, numberOfRowPerPage]);
 
   useEffect(() => {

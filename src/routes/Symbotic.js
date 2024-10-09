@@ -33,7 +33,6 @@ export default function Symbotic() {
       }
     }
     fetchData();
-    // console.log("selectedWarehouse", selectedWarehouse);
   }, [selectedWarehouse, currentItem]);
 
   const onPageChange = (item) => {
@@ -42,18 +41,12 @@ export default function Symbotic() {
       setCurrentItem(2);
     }
   };
-  /*console.log('item', item);
-    if (item?.includes(2) && currentItem === 1) {
-       setCurrentItem(2);
-    } else {
-        setCurrentItem(1);
-    }*/
 
   return loading ? (
     <LoadingIndicator />
   ) : (
     <>
-        {console.log(currentItem)}
+      {console.log(currentItem)}
       {currentItem === 1 && lpnData?.length > 0 && (
         <SymboticLpnTable data={lpnData} />
       )}
@@ -62,11 +55,12 @@ export default function Symbotic() {
       )}
 
       <Pagination
-          data={[1, 2]}
-          onPageChange={onPageChange}
-          customPageNumber
-          totalCustomPages={2}
-          isSymbotic={true}
+        data={[1, 2]}
+        onPageChange={onPageChange}
+        customPageNumber
+        totalCustomPages={2}
+        isSymbotic={true}
+        symboticDataType={currentItem}
       />
       <ProgressBar timerActive={!loading} />
     </>
